@@ -19,7 +19,7 @@ export async function ask_about_file(file: string) {
 		[1]: 'commit',
 	});
 	if (ans && +ans) {
-		commit_file(file);
+		await commit_file(file);
 	}
 }
 
@@ -38,7 +38,6 @@ export async function go_through_files(...files: string[]) {
 			await ask_about_file(file).catch(console.error);
 		}
 	}
-	process.exit(0);
 }
 
 process
