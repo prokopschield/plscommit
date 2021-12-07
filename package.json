@@ -1,0 +1,27 @@
+{
+	"name": "plscommit",
+	"description": "Format commits nicely",
+	"version": "1.0.0-1",
+	"main": "lib/index.js",
+	"bin": {
+		"plscommit": "lib/cli.js"
+	},
+	"author": "Prokop Schield",
+	"devDependencies": {
+		"@types/node": ">=14",
+		"@types/prompts": "^2.0.14"
+	},
+	"keywords": [],
+	"license": "GPL-3.0-or-later",
+	"dependencies": {
+		"prompts": "^2.4.2"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/prokopschield/oplist.git"
+	},
+	"bugs": {
+		"url": "https://github.com/prokopschield/oplist/issues"
+	},
+	"homepage": "https://github.com/prokopschield/oplist#readme"
+}
