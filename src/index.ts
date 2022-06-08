@@ -4,9 +4,24 @@ import run from './run';
 import selector from './selector';
 
 export async function commit_file(file: string) {
+	const type =
+		(await selector(`Commit type (${file})`, {
+			'': 'custom',
+			feat: 'feat',
+			fix: 'fix',
+			refactor: 'refactor',
+			revert: 'revert',
+			build: 'build',
+			chore: 'chore',
+			ci: 'ci',
+			docs: 'docs',
+			perf: 'perf',
+			style: 'style',
+			test: 'test',
+		})) || (await ask('Custom commit type'));
 	const msg = await ask('What did you modify?');
-	if (msg) {
-		const full = `${file}: ${msg}`;
+	if (type && msg) {
+		const full = `${type}(${file}): ${msg}`;
 		await run(`git add ${file}`);
 		await run(`git commit -m ${JSON.stringify(full)}`);
 		return true;
@@ -24,6 +39,7 @@ export async function ask_about_file(file: string) {
 }
 
 export async function go_through_files(...files: string[]) {
+	const commit_f = files.length ? commit_file : ask_about_file;
 	if (!files.length) {
 		files = (
 			await new Promise<string>((resolve) =>
@@ -35,7 +51,7 @@ export async function go_through_files(...files: string[]) {
 	}
 	for (const file of files) {
 		if (file) {
-			await ask_about_file(file).catch(console.error);
+			await commit_f(file).catch(console.error);
 		}
 	}
 }
