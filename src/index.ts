@@ -4,8 +4,9 @@ import run from './run';
 import selector from './selector';
 
 export async function commit_file(file: string) {
+	const filestr = file === '.' ? '' : `(${file})`;
 	const type =
-		(await selector(`Commit type (${file})`, {
+		(await selector(`Commit type ${filestr}`.trim(), {
 			'': 'custom',
 			feat: 'feat',
 			fix: 'fix',
@@ -21,7 +22,7 @@ export async function commit_file(file: string) {
 		})) || (await ask('Custom commit type'));
 	const msg = await ask('What did you modify?');
 	if (type && msg) {
-		const full = `${type}(${file}): ${msg}`;
+		const full = `${type}${filestr}: ${msg}`;
 		await run(`git add ${file}`);
 		await run(`git commit -m ${JSON.stringify(full)}`);
 		return true;
