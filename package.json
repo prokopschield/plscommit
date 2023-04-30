@@ -1,7 +1,7 @@
 {
 	"name": "plscommit",
 	"description": "Format commits nicely",
-	"version": "1.0.0-5",
+	"version": "1.0.0-6",
 	"main": "lib/index.js",
 	"bin": {
 		"plscommit": "lib/cli.js"
