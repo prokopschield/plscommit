@@ -46,7 +46,22 @@ export async function go_through_files(...files: string[]) {
 
 	if (!files.length) {
 		return exec('git diff --name-only', (error, stdout, stderr) => {
-			const files = stdout.toString().split(/[\r\n]+/g);
+			const files = stdout
+				.toString()
+				.split(/[\r\n]+/g)
+				.map((file) => {
+					file = file.replace(/\/$/g, '');
+					file = file.replace(/\/mod\.rs$/g, '');
+					file = file.replace(/\/index\.[tj]s$/g, '');
+					file = file.replace(/(\/|^)src$/g, '');
+					file = file.replace(
+						/^(.+)(\/?[^\/]*)(\/?[^\/]*).*$/,
+						'$1$2$3'
+					);
+
+					return file;
+				})
+				.filter((a) => a);
 
 			go_through_files(...(files.length ? files : '.'));
 		});
