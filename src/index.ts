@@ -43,15 +43,13 @@ export async function ask_about_file(file: string) {
 
 export async function go_through_files(...files: string[]) {
 	const commit_f = files.length ? commit_file : ask_about_file;
+
 	if (!files.length) {
-		files = (
-			await new Promise<string>((resolve) =>
-				exec('git diff --name-only', (error, stdout, stderr) => {
-					resolve(stdout.toString());
-				})
-			)
-		).split(/[\r\n]+/g);
+		return exec('git diff --name-only', (error, stdout, stderr) => {
+			go_through_files(...stdout.toString().split(/[\r\n]+/g));
+		});
 	}
+
 	for (const file of files) {
 		if (file) {
 			await commit_f(file).catch(console.error);
