@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 import { shellEscape } from 'ps-std';
 
 import ask from './ask';
@@ -6,6 +6,8 @@ import run from './run';
 import selector from './selector';
 
 export async function commit_file(file: string) {
+	const repo_root = String(execSync('git rev-parse --show-toplevel')).trim();
+	const options = { cwd: repo_root };
 	const filestr = file === '.' ? '' : `(${file})`;
 	const type =
 		(await selector(`Commit type ${filestr}`.trim(), {
@@ -25,8 +27,8 @@ export async function commit_file(file: string) {
 	const msg = await ask('What did you modify?');
 	if (type && msg) {
 		const full = `${type}${filestr}: ${msg}`;
-		await run(`git add ${shellEscape(file)}`);
-		await run(`git commit -m ${shellEscape(full)}`);
+		await run(`git add ${shellEscape(file)}`, options);
+		await run(`git commit -m ${shellEscape(full)}`, options);
 		return true;
 	}
 }
