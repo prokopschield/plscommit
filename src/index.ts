@@ -46,7 +46,9 @@ export async function go_through_files(...files: string[]) {
 
 	if (!files.length) {
 		return exec('git diff --name-only', (error, stdout, stderr) => {
-			go_through_files(...stdout.toString().split(/[\r\n]+/g));
+			const files = stdout.toString().split(/[\r\n]+/g);
+
+			go_through_files(...(files.length ? files : '.'));
 		});
 	}
 
