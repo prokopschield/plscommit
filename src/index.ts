@@ -47,7 +47,7 @@ export async function go_through_files(...files: string[]) {
 	const commit_f = files.length ? commit_file : ask_about_file;
 
 	if (!files.length) {
-		return exec('git diff --name-only', (error, stdout, stderr) => {
+		return exec('git diff --name-only', async (error, stdout, stderr) => {
 			const files = stdout
 				.toString()
 				.split(/[\r\n]+/g)
@@ -65,7 +65,15 @@ export async function go_through_files(...files: string[]) {
 				})
 				.filter((a) => a);
 
-			go_through_files(...(files.length ? files : '.'));
+			const final = files.length ? files : '.';
+
+			if (final.length > 1) {
+				for (const file of final) {
+					await ask_about_file(file);
+				}
+			} else {
+				await go_through_files(...final);
+			}
 		});
 	}
 
