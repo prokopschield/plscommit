@@ -1,4 +1,5 @@
 import { exec, execSync } from 'child_process';
+import path from 'path';
 import { shellEscape } from 'ps-std';
 
 import ask from './ask';
@@ -37,9 +38,14 @@ export async function ask_about_file(file: string) {
 	const ans = await selector(`Commit ${file}?`, {
 		[0]: 'do not commit',
 		[1]: 'commit',
+		[2]: 'commit parent directory',
 	});
-	if (ans && +ans) {
+	if (!ans) {
+		return;
+	} else if (+ans === 1) {
 		await commit_file(file);
+	} else if (+ans === 2) {
+		await ask_about_file(path.join(file, '..'));
 	}
 }
 
